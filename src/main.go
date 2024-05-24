@@ -1,9 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"github.com/jung-kurt/gofpdf"
 )
 
 func main() {
-	fmt.Println("Initial setup")
+	pdf := gofpdf.New(gofpdf.OrientationPortrait, "mm", "A4", "")
+	margin := 10.0
+	pdf.SetMargins(margin, margin, margin+10)
+	pdf.AddPage()
 }
