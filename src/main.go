@@ -95,9 +95,9 @@ func main() {
 		if header == "Product" {
 			pdf.CellFormat(68, 9, header, "B", 0, "L", false, 0, "")
 		} else if header == "Closing Balance" {
-			pdf.CellFormat(38, 9, header, "B", 0, "R", false, 0, "")
+			pdf.CellFormat(34, 9, header, "B", 0, "R", false, 0, "")
 		} else {
-			pdf.CellFormat(24, 9, header, "B", 0, "C", false, 0, "")
+			pdf.CellFormat(26, 9, header, "B", 0, "L", false, 0, "")
 		}
 	}
 	pdf.Ln(-1)
@@ -106,22 +106,75 @@ func main() {
 	for _, product := range data.Products {
 		pdf.SetX(margin+5)
 		pdf.CellFormat(68, 8, product.Product, "B", 0, "L", false, 0, "")
-		pdf.CellFormat(24, 8, product.Balance, "B", 0, "C", false, 0, "")
-		pdf.CellFormat(24, 8, product.MoneyOut, "B", 0, "C", false, 0, "")
-		pdf.CellFormat(24, 8, product.MoneyIn, "B", 0, "C", false, 0, "")
-		pdf.CellFormat(38, 8, product.ClosingBalance, "B", 0, "R", false, 0, "")
+		pdf.CellFormat(26, 8, product.Balance, "B", 0, "L", false, 0, "")
+		pdf.CellFormat(26, 8, product.MoneyOut, "B", 0, "L", false, 0, "")
+		pdf.CellFormat(26, 8, product.MoneyIn, "B", 0, "L", false, 0, "")
+		pdf.CellFormat(34, 8, product.ClosingBalance, "B", 0, "R", false, 0, "")
 		pdf.Ln(-1)
 	}
 
 	pdf.SetX(margin+5)
 	pdf.CellFormat(68, 8, "Total", "", 0, "L", false, 0, "")
-	pdf.CellFormat(24, 8, fmt.Sprintf("$%.2f", 2.52), "", 0, "C", false, 0, "")
-	pdf.CellFormat(24, 8, fmt.Sprintf("$%.2f", 1944.09), "", 0, "C", false, 0, "")
-	pdf.CellFormat(24, 8, fmt.Sprintf("$%.2f", 1944.09), "", 0, "C", false, 0, "")
-	pdf.CellFormat(38, 8, fmt.Sprintf("$%.2f", 36.43), "", 0, "R", false, 0, "")
+	pdf.CellFormat(26, 8, fmt.Sprintf("$%.2f", 2.52), "", 0, "L", false, 0, "")
+	pdf.CellFormat(26, 8, fmt.Sprintf("$%.2f", 1944.09), "", 0, "L", false, 0, "")
+	pdf.CellFormat(26, 8, fmt.Sprintf("$%.2f", 1944.09), "", 0, "L", false, 0, "")
+	pdf.CellFormat(34, 8, fmt.Sprintf("$%.2f", 36.43), "", 0, "R", false, 0, "")
 	pdf.Ln(-1)
 
+	pdf.SetFont("Arial", "", 5)
+	pdf.SetX(margin+4)
+	pdf.CellFormat(0, 10, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley ", "", 1, "L", false, 0, "")
+	pdf.Ln(-1)
 
+	// transactions
+	pdf.SetFont("Arial", "B", 11)
+	pdf.SetX(margin+4)
+	pdf.CellFormat(0, 10, "Account transactions from 1 February 2023 to 29 March 2023", "", 1, "L", false, 0, "")
+	pdf.SetFont("Arial", "B", 8)
+	pdf.SetX(margin+5)
+
+	// Table headers
+	headers = []string{"Date", "Description", "Money Out", "Money In", "Balance"}
+	for _, header := range headers {
+		if header == "Description" {
+			pdf.CellFormat(68, 9, header, "B", 0, "L", false, 0, "")
+		} else if header == "Balance" {
+			pdf.CellFormat(38, 9, header, "B", 0, "R", false, 0, "")
+		} else {
+			if header == "Date"{
+				pdf.CellFormat(24, 9, header, "B", 0, "L", false, 0, "")
+			} else {
+				pdf.CellFormat(24, 9, header, "B", 0, "L", false, 0, "")
+			}
+		}
+	}
+	pdf.Ln(-1)
+
+	pdf.SetFont("Arial", "", 9)
+	for _, transaction := range data.Transactions {
+		pdf.SetX(margin+5)
+		pdf.CellFormat(24, 8, transaction.Date, "B", 0, "L", false, 0, "")
+		pdf.CellFormat(68, 8, transaction.Description, "B", 0, "L", false, 0, "")
+		pdf.CellFormat(24, 8, transaction.MoneyOut, "B", 0, "L", false, 0, "")
+		pdf.CellFormat(24, 8, transaction.MoneyIn, "B", 0, "L", false, 0, "")
+		pdf.CellFormat(38, 8, transaction.Balance, "B", 0, "R", false, 0, "")
+		pdf.Ln(-1)
+	}
+
+	pdf.Ln(-1)
+	pdf.Ln(-1)
+
+	// footer
+
+	// qr code
+	logoPath = "images/qr.png"
+	logoWidth = 12.0
+	logoHeight = 12.0
+	pdf.Image(logoPath, margin+5, margin+240, logoWidth, logoHeight, false, "", 0, "")
+
+	pdf.SetFont("Arial", "", 5)
+	pdf.SetX(margin+50)
+	pdf.MultiCell(140, 3, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque in convallis ex. Praesent condimentum ultricies finibus. Duis neque velit, dignissim vitae augue nec, bibendum gravida lectus. Proin vitae mauris pellentesque, tristique purus eget, tempor metus. Nunc tincidunt dui metus, sit amet vehicula dolor varius a. Suspendisse diam purus, ultricies eu lacinia sit amet, iaculis non tellus. Sed tempus vehicula tortor nec posuere. Suspendisse porttitor posuere metus. Nulla enim nibh, pretium interdum erat a, ullamcorper convallis lorem. Proin efficitur, nulla quis ullamcorper pretium, turpis ligula molestie sapien, nec scelerisque mauris nisl quis enim. Praesent mi dolor, gravida eget velit a, convallis venenatis sem. Mauris ut massa sapien. Etiam molestie ipsum eu rhoncus semper.", "", "L", false)
 
 	// Save the PDF to a file
 	err = pdf.OutputFileAndClose("pdf/platnova.pdf")
